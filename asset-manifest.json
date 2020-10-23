@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/react-mini-tchat/static/css/main.843892a3.chunk.css",
-    "main.js": "/react-mini-tchat/static/js/main.b260d563.chunk.js",
-    "main.js.map": "/react-mini-tchat/static/js/main.b260d563.chunk.js.map",
+    "main.js": "/react-mini-tchat/static/js/main.c923a34a.chunk.js",
+    "main.js.map": "/react-mini-tchat/static/js/main.c923a34a.chunk.js.map",
     "runtime-main.js": "/react-mini-tchat/static/js/runtime-main.d2e0417c.js",
     "runtime-main.js.map": "/react-mini-tchat/static/js/runtime-main.d2e0417c.js.map",
-    "static/js/2.2acfd09d.chunk.js": "/react-mini-tchat/static/js/2.2acfd09d.chunk.js",
-    "static/js/2.2acfd09d.chunk.js.map": "/react-mini-tchat/static/js/2.2acfd09d.chunk.js.map",
+    "static/js/2.5a9fc032.chunk.js": "/react-mini-tchat/static/js/2.5a9fc032.chunk.js",
+    "static/js/2.5a9fc032.chunk.js.map": "/react-mini-tchat/static/js/2.5a9fc032.chunk.js.map",
     "index.html": "/react-mini-tchat/index.html",
-    "precache-manifest.73dbd3cc411ffc44b02222f3387515ae.js": "/react-mini-tchat/precache-manifest.73dbd3cc411ffc44b02222f3387515ae.js",
+    "precache-manifest.42d887e290b47d263778fe5c4ed244b5.js": "/react-mini-tchat/precache-manifest.42d887e290b47d263778fe5c4ed244b5.js",
     "service-worker.js": "/react-mini-tchat/service-worker.js",
     "static/css/main.843892a3.chunk.css.map": "/react-mini-tchat/static/css/main.843892a3.chunk.css.map",
-    "static/js/2.2acfd09d.chunk.js.LICENSE.txt": "/react-mini-tchat/static/js/2.2acfd09d.chunk.js.LICENSE.txt"
+    "static/js/2.5a9fc032.chunk.js.LICENSE.txt": "/react-mini-tchat/static/js/2.5a9fc032.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.d2e0417c.js",
-    "static/js/2.2acfd09d.chunk.js",
+    "static/js/2.5a9fc032.chunk.js",
     "static/css/main.843892a3.chunk.css",
-    "static/js/main.b260d563.chunk.js"
+    "static/js/main.c923a34a.chunk.js"
   ]
 }
