@@ -1,4 +1,5 @@
-import {Evt} from "evt";
+import {Evt, NonPostableEvt, ToPostableEvt} from "evt";
+
 
 
 
@@ -16,7 +17,7 @@ export type Store = {
     users: User[];
     sendMessage: (params: {emitter: User; receiver: User; description: string}) => Promise<void>;
 
-    evtMessageSent: Evt<void>;
+    evtMessageSent: NonPostableEvt<void>;
 
 }
 
@@ -37,8 +38,8 @@ export async function getStore(): Promise<Store>{
         }
     ]
 
-    const store: Store = {
-        "evtMessageSent": new Evt(),
+    const store: ToPostableEvt<Store> = {
+        "evtMessageSent": Evt.create(),
 
         "sendMessage": async params => {
             await simulateNetworkDelay(300);

@@ -6,7 +6,9 @@
   "dependencies": {
     "evt": "^1.8.10",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-async-hook": "^3.6.2",
+    "react-dom": "^17.0.1",
+    "save": "^2.4.0"
   },
   "scripts": {
     "predeploy": "npm run build && cd build && mv index.html 404.html",
