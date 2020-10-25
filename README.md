@@ -1,5 +1,8 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+To access it on line via github pages, got to following address:
+https://thieryw.github.io/react-mini-tchat/
+
 ## Available Scripts
 
 In the project directory, you can run:
