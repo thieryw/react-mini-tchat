@@ -27,23 +27,25 @@ export const App:React.FunctionComponent<{
 
     return(
         <div className="App">
-            <h1>Tchat App</h1>
-            <input type="button" value="Toggle User" onClick={toggleUser}/>
+            <header>
+                <h1>{store.users[currentUserIndex].name}</h1>
+                <input type="button" value="Toggle User" onClick={toggleUser}/>
+            </header>
+
 
 
 
             {
                 store.users.map((user, index) => 
-                        <div 
-                            key={index} 
-                            className={index === currentUserIndex ? "current" : ""}
-                        >
                             <User 
                                 store={store}
                                 user={user}
+                                key={index}
+                                isCurrentUser={
+                                    currentUserIndex === index ? true : false
+                                }
 
                             />
-                        </div>
 
                     )
 

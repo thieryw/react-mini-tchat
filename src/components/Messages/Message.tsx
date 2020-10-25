@@ -13,7 +13,11 @@ export const Message: React.FunctionComponent<{
     return(
         <div className={message.direction}>
             <em>
-                {message.direction === "incoming" ? "received" : "sent"}
+                {
+                    message.direction === 
+                    "incoming" ? `From ${message.emitter.name}` : 
+                    `to ${message.receiver.name}`
+                }
             </em>
 
             <p>{message.description}</p>

@@ -8,12 +8,11 @@ export const Form: React.FunctionComponent<{
     store: Pick<Store,
        "sendMessage" 
     >;
-    emitter: Store["users"][number];
-    receiver: Store["users"][number];
+    user: Store["users"][number];
 
 }> = (props)=>{
 
-    const {store, receiver, emitter} = props;
+    const {store, user} = props;
     const [textInput, setTextInput] = useState("");
 
     const asyncSendMessage = useAsyncCallback(store.sendMessage)
@@ -26,8 +25,7 @@ export const Form: React.FunctionComponent<{
 
         asyncSendMessage.execute(
             {
-                emitter, 
-                receiver, 
+                user,
                 "description": textInput
             }
         );
@@ -35,17 +33,16 @@ export const Form: React.FunctionComponent<{
         setTextInput("");
 
 
-    },[textInput, asyncSendMessage, emitter, receiver]);
+    },[textInput, asyncSendMessage, user]);
 
     return(
         <form onSubmit={handleSubmit}>
-            <input 
-                type="text"
+            <textarea 
                 value={textInput}
                 onChange={useCallback(({target}) => setTextInput(target.value),[])}
             />
 
-            <input type="submit" value="send message"/>
+            <input disabled={user.interlocutor === undefined} type="submit" value="send message"/>
         </form>
 
     )

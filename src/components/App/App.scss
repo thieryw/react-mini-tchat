@@ -5,35 +5,152 @@ body{
         flex-direction: column;
         width: 100vw;
         height: 100vh;
-        h1{
-            width: 100%;
+        border: solid black 2px;
+        header{
+            display: flex;
+            h1{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 0;
+                height: 100px;
+                width: 100%;
+                border-bottom: solid black 2px;
+                border-right: solid black 2px;
+                background-color: cadetblue;
+            }
+
+            >input{
+                flex: 1;
+                width: 100%;
+                align-self: center;
+                height: 100%;
+                border-bottom: solid black 2px;
+                background-color: chocolate;
+                font-size: 2em;
+            }
         }
-        >input{
-            width: 100%;
-        }
+
 
         > div{
             display: none;
         }
 
+
+
         .current{
-            flex: 1;
             display: flex;
+            flex: 1;
             overflow: hidden;
 
-            .user{
+            .contacts{
                 height: 100%;
+                border-right: solid black 2px;
+                overflow: auto;
                 display: flex;
                 flex-direction: column;
-                flex: 1;
-                .message-wrapper{
-                    flex: 1;
-                    overflow: auto;
+                background-color: pink;
+                min-width: 120px;
+                h2{
+                    padding-inline-end: 20px;
+                    padding-inline-start: 20px;
                 }
+                ul{
+                    flex: 1;
+                    list-style-type: none;
+                    padding-inline-start: 0;
+                    margin-block-start: 0;
+                    margin-block-end: 0;
+                    overflow: auto;
 
+                    li{
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-color: green;
+                        padding-left: 20px;
+                        padding-right: 20px;
+                        height: 40px;
+                        color: white;
+                        transition: background-color 500ms;
+
+                    }
+                    li:hover{
+                        cursor: pointer;
+                        background-color: purple;
+                    }
+
+                }
             }
-            
+
+            .flex-message-and-form{
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                width: 300px;
+                flex: 1;
+                background-color: beige;
+                
+                .message-wrapper{
+                    h2{
+                        text-align: center;
+                    }
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
+                    overflow: hidden;
+                    flex: 1;
+
+                    .messages{
+                        border-top: solid black 2px;
+                        overflow: auto;
+
+
+
+                        .incoming, .outgoing{
+                            padding: 10px;
+                            border-radius: 20px;
+
+                            em{
+                                font-size: 0.8em;
+                            }
+
+                            p{
+                                word-wrap: break-word;
+                            }
+                        }
+                        .incoming{
+                            background-color: lightgreen;
+                            margin: 10px;
+
+
+                        }
+                        .outgoing{
+                            background-color: lightskyblue;
+                            margin: 10px 10px 10px 40px;
+
+                        }
+
+                    }
+
+                }
+                form{
+                    display: flex;
+                    border-top: solid black 2px;
+                    textarea{
+                        resize: none;
+                        flex: 1;
+                        height: 50px;
+                        word-wrap: break-word;
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                        padding: 10px;
+                    }
+
+                }
+            }
+
         }
+            
 
     }
 }

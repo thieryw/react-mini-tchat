@@ -1,26 +1,48 @@
-import React from "react";
+import React, {useReducer} from "react";
 import {Store} from "../../logic";
-import { Message } from "../Message/Message";
+import { Message } from "./Message";
+import {useEvt} from "evt/hooks";
 
 
 
 export const Messages:React.FunctionComponent<{
     user: Store["users"][number];
+    store: Pick<Store,
+        "evtMessageSent"
+    >
 
 }> = (props)=>{
 
-    const {user} = props;
+    const {user, store} = props;
+    const [, forceUpdate] = useReducer(x=>x+1, 0);
+
+
+    useEvt(ctx=>{
+
+        store.evtMessageSent.attach(
+            data => data.user.id === user.id || data.user.interlocutor?.id === user.id,
+            ctx,
+            ()=> forceUpdate()
+        );
+
+    },[store]);
+
 
 
 
     return(
         <div className="message-wrapper">
-            {
-                user.messages.map((message, index) => 
-                    <Message key={index} message={message}/>
-                ).reverse()
-            }
+            <h2>Messages</h2>
+            <div className="messages">
+                {
+                    user.messages.map((message, index) => 
+                        <Message key={index} message={message}/>
+                    ).reverse()
+                }
+            </div>
+
         </div>
 
     )
+
 }
