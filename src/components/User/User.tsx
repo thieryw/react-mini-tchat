@@ -5,6 +5,8 @@ import {Form} from "../Form/Form";
 import {useEvt} from "evt/hooks";
 import {Contacts} from "../Contacts/Contacts";
 import {same} from "evt/tools/inDepth"
+import {useAsyncCallback} from "react-async-hook";
+import {Spinner} from "../Spinner";
 
 
 export const User: React.FunctionComponent<{
@@ -40,8 +42,11 @@ export const User: React.FunctionComponent<{
 
     },[store])
 
- 
 
+    const asyncChangeInterlocutor = useAsyncCallback(store.changeInterlocutor);
+ 
+    
+    const asyncSendMessage = useAsyncCallback(store.sendMessage);
 
     
 
@@ -50,22 +55,33 @@ export const User: React.FunctionComponent<{
             <div className="contacts">
                 {
                     user.interlocutor === undefined ? "" : 
-                    <h2>{user.interlocutor.name}</h2>
+
+                    (
+                        asyncChangeInterlocutor.loading ? <h2><Spinner /></h2> : 
+
+                        <h2>{user.interlocutor.name}</h2>
+                    )
+                        
                 }
-                <Contacts contacts={contacts} user={user} store={store}/>
+                <Contacts 
+                    contacts={contacts} 
+                    user={user} 
+                    asyncChangeInterlocutor={asyncChangeInterlocutor}
+                />
             </div>
 
             <div className="flex-message-and-form">
                 <Messages 
                     user={user}
                     store={store}
+                    isMessageLoading={asyncSendMessage.loading}
 
                 />
 
                 <Form
 
                     user={user}
-                    store={store}
+                    asyncSendMessage={asyncSendMessage}
                 />
                 </div> 
 

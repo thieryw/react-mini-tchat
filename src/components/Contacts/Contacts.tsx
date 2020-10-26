@@ -1,5 +1,6 @@
 import React, {useCallback} from "react";
 import {Store} from "../../logic";
+import {UseAsyncReturn} from "react-async-hook";
 
 
 
@@ -7,12 +8,15 @@ import {Store} from "../../logic";
 export const Contacts: React.FunctionComponent<{
     contacts: Store["users"];
     user: Store["users"][number];
-    store: Pick<Store,
-        "changeInterlocutor"
-    >
+    asyncChangeInterlocutor: UseAsyncReturn<void, [{
+        user: Store["users"][number];
+        newInterlocutor: Store["users"][number];
+    }]>;    
 }> = (props)=>{
     
-    const {contacts, user, store} = props;
+    const {contacts, user, asyncChangeInterlocutor} = props;
+
+
 
 
 
@@ -24,7 +28,7 @@ export const Contacts: React.FunctionComponent<{
                     contact => 
                     <li 
                         key={contact.id}
-                        onClick={()=> store.changeInterlocutor({user, "newInterlocutor": contact})}
+                        onClick={() => asyncChangeInterlocutor.execute({user,  "newInterlocutor": contact})}
                     >
                         {contact.name}
                     </li>
