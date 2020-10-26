@@ -12,6 +12,11 @@ type Message = {
 
 }
 
+type conversation = {
+    messages: Message[];
+    participants: User[];
+}
+
 
 
 type User = {
