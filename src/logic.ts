@@ -3,31 +3,36 @@ import {Evt, NonPostableEvt, ToPostableEvt} from "evt";
 
 type Message = {
     description: string;
-    direction: "incoming" | "outgoing";
-    id: number;
+    emitter: User;
+    receivers: User[];
 }
 
 type Conversation = {
-    interlocutor: User;
+    participants: User[];
     messages: Message[];
     id: number;
 }
 type User = {
     name: string;
     contacts: User[];
-    interlocutor: User | undefined;
+    interlocutors: User[];
     conversations: Conversation[];
+    currentConversation: Conversation | undefined;
     id: number;
 
 }
 
 export type Store = {
     users: User[];
-    selectContact: (params: {user: User; contact: User}) => Promise<void>;
-    sendMessage: (params: {emitter: User; receiver: User; description: string}) => Promise<void>;
+    selectInterlocutor: (params: {user: User; contact: User}) => Promise<void>;
+    selectConversation: (params: {user: User; conversation: Conversation})=> Promise<void>;
+    sendMessage: (params: {emitter: User; conversation: Conversation; description: string}) => Promise<void>;
+    newConversation: (user: User)=> Promise<void>;
 
-    evtContactSelected: NonPostableEvt<Parameters<Store["selectContact"]>[0]>;
+    evtInterlocutorSelected: NonPostableEvt<Parameters<Store["selectInterlocutor"]>[0]>;
     evtMessageSent: NonPostableEvt<Parameters<Store["sendMessage"]>[0]>;
+    evtConversationSelected: NonPostableEvt<Parameters<Store["selectConversation"]>[0]>;
+    evtConversationStarted: NonPostableEvt<Parameters<Store["newConversation"]>[0]>;
 }
 
 
@@ -42,10 +47,11 @@ export async function getStore(): Promise<Store>{
         for(let i = 0; i < 3; i++){
             out.push({
                 "contacts": [],
+                "name": `User ${i+1}`,
+                "interlocutors": [],
                 "conversations": [],
-                "id": i,
-                "interlocutor": undefined,
-                "name": `User ${i+1}`
+                "currentConversation": undefined,
+                "id": i
             })
         }
 
@@ -64,16 +70,92 @@ export async function getStore(): Promise<Store>{
 
     })();
 
+    let conversationId: 0;
+
 
     const store: ToPostableEvt<Store> = {
        users,
-       "evtContactSelected": new Evt(),
+       "evtInterlocutorSelected": new Evt(),
        "evtMessageSent": new Evt(),
-       "selectContact": async params =>{
+       "evtConversationStarted": new Evt(),
+       "evtConversationSelected": new Evt(),
+
+       "selectInterlocutor": async params =>{
+           const {contact, user} = params;
+
+           await simulateNetworkDelay(300);
+
+           user.interlocutors.push(contact);
+
+           store.evtInterlocutorSelected.post(params);
 
        },
 
+       "selectConversation": async params =>{
+           const {conversation, user} = params;
+
+           await simulateNetworkDelay(300);
+
+           user.currentConversation = conversation;
+
+           store.evtConversationSelected.post(params);
+
+       },
+
+       "newConversation": async user =>{
+           await simulateNetworkDelay(300);
+
+           try{
+               if(user.interlocutors.length === 0){
+                   throw new Error("Error! No interlocutors selected");
+               }
+
+           }catch(err){
+                console.log(err);
+                return;
+           }
+
+           user.conversations.push({
+               "id": conversationId,
+               "messages": [],
+               "participants": (()=>{
+                   const out: User[] = [];
+
+                   out.push(user);
+
+                   user.interlocutors.forEach(user =>{
+                       out.push(user);
+                   });
+
+                   return out;
+               })()
+
+           });
+
+           user.interlocutors = [];
+
+           store.evtConversationStarted.post(user);
+       },
+
        "sendMessage": async params =>{
+           const {emitter, conversation, description} = params;
+
+           await simulateNetworkDelay(300);
+
+           conversation.messages.push({
+               description,
+               emitter,
+               "receivers": (()=>{
+                   const out: User[] = conversation.participants;
+
+                   out.splice(out.indexOf(emitter), 1);
+
+                   return out;
+               })()
+           });
+
+           store.evtMessageSent.post(params);
+
 
        }
 
