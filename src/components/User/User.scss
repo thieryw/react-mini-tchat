@@ -3,4 +3,12 @@ body{
     .hidden{
         display: none;
     }
+
+    .outgoing{
+        background-color: green;
+    }
+
+    .incoming{
+        background-color: lightblue;
+    }
 }

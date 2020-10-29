@@ -115,8 +115,8 @@ export async function getStore(): Promise<Store>{
                 return;
            }
 
-           user.conversations.push({
-               "id": conversationId,
+           const newConversation: Conversation = {
+               "id": conversationId++,
                "messages": [],
                "participants": (()=>{
                    const out: User[] = [];
@@ -130,7 +130,11 @@ export async function getStore(): Promise<Store>{
                    return out;
                })()
 
-           });
+           }
+
+           user.conversations.push(newConversation);
+
+           user.interlocutors.forEach(interlocutor => interlocutor.conversations.push(newConversation));
 
            user.interlocutors = [];
 
@@ -146,9 +150,16 @@ export async function getStore(): Promise<Store>{
                description,
                emitter,
                "receivers": (()=>{
-                   const out: User[] = emitter.currentConversation.participants;
 
-                   out.splice(out.indexOf(emitter), 1);
+                   const out: User[] = [];
+
+                   emitter.currentConversation.participants.forEach(participant =>{
+                       if(participant === emitter){
+                           return;
+                       }
+
+                       out.push(participant);
+                   })
 
                    return out;
                })()
