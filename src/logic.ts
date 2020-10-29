@@ -26,7 +26,7 @@ export type Store = {
     users: User[];
     selectInterlocutor: (params: {user: User; contact: User}) => Promise<void>;
     selectConversation: (params: {user: User; conversation: Conversation})=> Promise<void>;
-    sendMessage: (params: {emitter: User; conversation: Conversation; description: string}) => Promise<void>;
+    sendMessage: (params: {emitter: User; description: string}) => Promise<void>;
     newConversation: (user: User)=> Promise<void>;
 
     evtInterlocutorSelected: NonPostableEvt<Parameters<Store["selectInterlocutor"]>[0]>;
@@ -138,15 +138,15 @@ export async function getStore(): Promise<Store>{
        },
 
        "sendMessage": async params =>{
-           const {emitter, conversation, description} = params;
+           const {emitter, description} = params;
 
            await simulateNetworkDelay(300);
 
-           conversation.messages.push({
+           emitter.currentConversation?.messages.push({
                description,
                emitter,
                "receivers": (()=>{
-                   const out: User[] = conversation.participants;
+                   const out: User[] = emitter.currentConversation.participants;
 
                    out.splice(out.indexOf(emitter), 1);
 

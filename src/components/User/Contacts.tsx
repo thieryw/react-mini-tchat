@@ -15,13 +15,14 @@ export const Contacts: React.FunctionComponent<{
         "newConversation" |
         "evtConversationStarted"
 
-    >
+    >;
+
+    isComponentVisible: boolean;
 
 }> = (props)=>{
 
 
-    const {user, store} = props;
-    const [isComponentHidden, setIsComponentHidden] = useState(false);
+    const {user, store, isComponentVisible} = props;
     const [, forceUpdate] = useReducer(x=>x+1, 0);
 
     const asyncSelectInterlocutor = useAsyncCallback(store.selectInterlocutor);
@@ -35,27 +36,21 @@ export const Contacts: React.FunctionComponent<{
             ()=> forceUpdate()
         );
 
-        store.evtConversationStarted.attach(
-            _user => same(_user, user),
-            ctx,
-            ()=> forceUpdate()
-        )
-
-
     }, [store, user]);
 
 
 
     return(
-        <div className={`contacts ${isComponentHidden ? "hidden" : ""}`}>
+        <div className={`contacts ${isComponentVisible ? "" : "hidden"}`}>
             <h2>Contacts</h2>
             <em>{user.contacts.length} contacts</em>
             {
                 user.contacts.map(
-                    contact=> 
+                    (contact, index)=> 
                     <p 
+                        key={index}
                         onClick={
-                            useCallback(()=> asyncSelectInterlocutor.execute({user, contact}),[store, user])
+                            ()=> asyncSelectInterlocutor.execute({user, contact})
                         }>{contact.name}
                     </p>
                 )
