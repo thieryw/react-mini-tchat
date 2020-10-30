@@ -25,11 +25,13 @@ type User = {
 export type Store = {
     users: User[];
     selectInterlocutor: (params: {user: User; contact: User}) => Promise<void>;
+    unselectInterlocutor: (params: {user: User; contact: User}) => Promise<void>;
     selectConversation: (params: {user: User; conversation: Conversation})=> Promise<void>;
     sendMessage: (params: {emitter: User; description: string}) => Promise<void>;
     newConversation: (user: User)=> Promise<void>;
 
     evtInterlocutorSelected: NonPostableEvt<Parameters<Store["selectInterlocutor"]>[0]>;
+    evtInterlocutorUnselected: NonPostableEvt<Parameters<Store["unselectInterlocutor"]>[0]>;
     evtMessageSent: NonPostableEvt<Parameters<Store["sendMessage"]>[0]>;
     evtConversationSelected: NonPostableEvt<Parameters<Store["selectConversation"]>[0]>;
     evtConversationStarted: NonPostableEvt<Parameters<Store["newConversation"]>[0]>;
@@ -76,6 +78,7 @@ export async function getStore(): Promise<Store>{
     const store: ToPostableEvt<Store> = {
        users,
        "evtInterlocutorSelected": new Evt(),
+       "evtInterlocutorUnselected": new Evt(),
        "evtMessageSent": new Evt(),
        "evtConversationStarted": new Evt(),
        "evtConversationSelected": new Evt(),
@@ -88,6 +91,21 @@ export async function getStore(): Promise<Store>{
            user.interlocutors.push(contact);
 
            store.evtInterlocutorSelected.post(params);
+
+       },
+
+       "unselectInterlocutor": async params =>{
+           const {contact, user} = params;
+
+           await simulateNetworkDelay(300);
+
+
+           user.interlocutors.splice(
+               user.interlocutors.indexOf(contact),
+               1
+           );
+
+           store.evtInterlocutorUnselected.post(params);
 
        },
 

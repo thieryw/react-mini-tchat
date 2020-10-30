@@ -30,7 +30,7 @@ export const User: React.FunctionComponent<{
         store.evtConversationSelected.attach(
             data => same(data.user, user),
             ctx,
-            () => {setIsConversationVisible(true); console.log("ok")}
+            () => setIsConversationVisible(true)
         )
 
 

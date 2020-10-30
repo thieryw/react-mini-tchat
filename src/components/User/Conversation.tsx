@@ -31,7 +31,6 @@ export const Conversation: React.FunctionComponent<{
             "emitter": user
         });
 
-        console.log(textInput);
 
         
 
@@ -39,7 +38,7 @@ export const Conversation: React.FunctionComponent<{
 
 
 
-    },[user, textInput]);
+    },[textInput, asyncSendMessage, user]);
 
     useEvt(ctx =>{
         store.evtMessageSent.attach(
@@ -87,7 +86,7 @@ export const Conversation: React.FunctionComponent<{
             </div>
 
             <form onSubmit={handleSubmit}>
-                <textarea onChange={useCallback(({target}) => setTextInput(target.value), [user])} value={textInput}/>
+                <textarea onChange={useCallback(({target}) => setTextInput(target.value), [])} value={textInput}/>
 
                 <input type="submit"/>
 
