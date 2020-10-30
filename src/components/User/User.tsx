@@ -4,7 +4,9 @@ import {useEvt} from "evt/hooks";
 import {same} from "evt/tools/inDepth";
 import {Contacts} from "./Contacts";
 import {Conversation} from "./Conversation";
+import {Evt} from "evt";
 import "./User.scss";
+
 
 
 
@@ -21,17 +23,25 @@ export const User: React.FunctionComponent<{
     const [isConversationVisible, setIsConversationVisible] = useState(false);
 
     useEvt(ctx=>{
-        store.evtConversationStarted.attach(
+        
+
+        Evt.merge(ctx, [store.evtConversationStarted, store.evtInterlocutorsEmptied]).attach(
             _user => same(_user, user),
-            ctx,
-            ()=> setIsContactVisible(false)
+            () => setIsContactVisible(false)
         );
 
         store.evtConversationSelected.attach(
             data => same(data.user, user),
             ctx,
             () => setIsConversationVisible(true)
-        )
+        );
+
+        store.evtConversationUnselected.attach(
+            _user => same(user, _user),
+            ctx,
+            () => setIsConversationVisible(false)
+        );
+
 
 
     },[store, user]);

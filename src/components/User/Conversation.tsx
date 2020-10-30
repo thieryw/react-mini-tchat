@@ -9,7 +9,8 @@ export const Conversation: React.FunctionComponent<{
     store: Pick<Store,
         "sendMessage" |
         "evtMessageSent" |
-        "evtConversationSelected"
+        "evtConversationSelected" |
+        "unselectConversation"
     >;
     user: Store["users"][number];
     isComponentVisible: boolean;
@@ -20,6 +21,7 @@ export const Conversation: React.FunctionComponent<{
     const [, forceUpdate] = useReducer(x=>x+1, 0);
 
     const asyncSendMessage = useAsyncCallback(store.sendMessage);
+    const asyncUnselectConversation = useAsyncCallback(store.unselectConversation);
 
 
 
@@ -61,13 +63,27 @@ export const Conversation: React.FunctionComponent<{
     return(
 
         <div className={`Conversation ${isComponentVisible ? "" : "hidden"}`}>
-            <h3>
-                {
-                    user.currentConversation?.participants.map(
-                        participant => `${participant.name}, `
-                    )
-                }
-            </h3>
+            <header>
+                <h3>
+                    {
+                        user.currentConversation?.participants.map(
+                            participant => `${participant.name}, `
+                        )
+                    }
+                </h3>
+                <input 
+                    type="button"
+                    value="<"
+                    onClick={
+                        useCallback(()=>{
+
+                            asyncUnselectConversation.execute(user);
+
+                        }, [user, asyncUnselectConversation])
+                    }
+                />
+            </header>
+
 
             <div className="messages">
                 {

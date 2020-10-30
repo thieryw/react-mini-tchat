@@ -26,14 +26,18 @@ export type Store = {
     users: User[];
     selectInterlocutor: (params: {user: User; contact: User}) => Promise<void>;
     unselectInterlocutor: (params: {user: User; contact: User}) => Promise<void>;
+    emptyInterlocutors: (user: User) => Promise<void>;
     selectConversation: (params: {user: User; conversation: Conversation})=> Promise<void>;
+    unselectConversation: (user: User)=> Promise<void>;
     sendMessage: (params: {emitter: User; description: string}) => Promise<void>;
     newConversation: (user: User)=> Promise<void>;
 
     evtInterlocutorSelected: NonPostableEvt<Parameters<Store["selectInterlocutor"]>[0]>;
     evtInterlocutorUnselected: NonPostableEvt<Parameters<Store["unselectInterlocutor"]>[0]>;
+    evtInterlocutorsEmptied: NonPostableEvt<User>;
     evtMessageSent: NonPostableEvt<Parameters<Store["sendMessage"]>[0]>;
     evtConversationSelected: NonPostableEvt<Parameters<Store["selectConversation"]>[0]>;
+    evtConversationUnselected: NonPostableEvt<User>;
     evtConversationStarted: NonPostableEvt<Parameters<Store["newConversation"]>[0]>;
 }
 
@@ -79,9 +83,11 @@ export async function getStore(): Promise<Store>{
        users,
        "evtInterlocutorSelected": new Evt(),
        "evtInterlocutorUnselected": new Evt(),
+       "evtInterlocutorsEmptied": new Evt(),
        "evtMessageSent": new Evt(),
        "evtConversationStarted": new Evt(),
        "evtConversationSelected": new Evt(),
+       "evtConversationUnselected": new Evt(),
 
        "selectInterlocutor": async params =>{
            const {contact, user} = params;
@@ -109,6 +115,14 @@ export async function getStore(): Promise<Store>{
 
        },
 
+       "emptyInterlocutors": async user =>{
+           await simulateNetworkDelay(300);
+
+           user.interlocutors = [];
+
+           store.evtInterlocutorsEmptied.post(user);
+       },
+
        "selectConversation": async params =>{
            const {conversation, user} = params;
 
@@ -117,6 +131,16 @@ export async function getStore(): Promise<Store>{
            user.currentConversation = conversation;
 
            store.evtConversationSelected.post(params);
+
+       },
+
+       "unselectConversation": async user =>{
+
+           await simulateNetworkDelay(300);
+
+           user.currentConversation = undefined;
+
+           store.evtConversationUnselected.post(user);
 
        },
 

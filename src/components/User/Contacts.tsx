@@ -15,7 +15,10 @@ export const Contacts: React.FunctionComponent<{
         "newConversation" |
         "selectInterlocutor" |
         "unselectInterlocutor" |
-        "evtInterlocutorUnselected"
+        "evtInterlocutorUnselected" |
+        "emptyInterlocutors" |
+        "evtInterlocutorsEmptied" |
+        "evtConversationStarted"
 
     >;
 
@@ -29,13 +32,17 @@ export const Contacts: React.FunctionComponent<{
 
 
     const asyncNewConversation = useAsyncCallback(store.newConversation);
+    const asyncEmptyInterlocutor = useAsyncCallback(store.emptyInterlocutors);
 
     useEvt(ctx =>{
 
         Evt.merge(ctx, [store.evtInterlocutorSelected, store.evtInterlocutorUnselected]).attach(
             data => same(user, data.user),
             ()=> forceUpdate()
-        )
+        );
+
+        
+        
 
     }, [store, user]);
 
@@ -43,8 +50,16 @@ export const Contacts: React.FunctionComponent<{
 
     return(
         <div className={`contacts ${isComponentVisible ? "" : "hidden"}`}>
-            <h2>Contacts</h2>
-            <h3>{user.interlocutors.map(interlocutor => `${interlocutor.name}, `)}</h3>
+            <header>
+                <h2>Contacts</h2>
+                <h3>{user.interlocutors.map(interlocutor => `${interlocutor.name}, `)}</h3>
+                <input 
+                    type="button" 
+                    value="<" 
+                    onClick={useCallback(()=> asyncEmptyInterlocutor.execute(user) , [asyncEmptyInterlocutor, user])}
+                />
+            </header>
+
             <em>{user.contacts.length} contacts</em>
             {
                 user.contacts.map(
@@ -87,7 +102,9 @@ const Contact: React.FunctionComponent<{
         "selectInterlocutor" |
         "evtInterlocutorSelected"|
         "unselectInterlocutor" |
-        "evtInterlocutorUnselected"
+        "evtInterlocutorUnselected" |
+        "evtInterlocutorsEmptied" |
+        "evtConversationStarted"
 
     >
 }> = (props)=>{
@@ -113,6 +130,15 @@ const Contact: React.FunctionComponent<{
             data => same(user, data.user) && same(contact, data.contact),
             ()=> setIsSelected(!isSelected)
         );
+
+
+        Evt.merge(ctx, [store.evtConversationStarted, store.evtInterlocutorsEmptied]).attach(
+            _user => same(user, _user) && isSelected,
+            () => setIsSelected(false)
+        );
+
+
+
 
     },[contact, user, store, isSelected])
 
