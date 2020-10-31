@@ -50,7 +50,7 @@ export async function getStore(): Promise<Store>{
 
     const users: User[] = (()=>{
         const out: User[] = [];
-        for(let i = 0; i < 3; i++){
+        for(let i = 0; i < 30; i++){
             out.push({
                 "contacts": [],
                 "name": `User ${i+1}`,

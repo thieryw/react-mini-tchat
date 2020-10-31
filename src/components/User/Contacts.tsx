@@ -1,9 +1,11 @@
 import React, {useCallback, useState, useReducer} from "react";
 import {Store} from "../../logic";
-import {useAsyncCallback} from "react-async-hook";
+import {useAsyncCallback, UseAsyncReturn} from "react-async-hook";
 import {useEvt} from "evt/hooks";
 import {same} from "evt/tools/inDepth";
 import {Evt} from "evt";
+import "./Contacts.scss";
+import {Spinner} from "../Spinner";
 
 
 
@@ -29,11 +31,13 @@ export const Contacts: React.FunctionComponent<{
 
     const {user, store, isComponentVisible} = props;
     const [, forceUpdate] = useReducer(x=>x+1, 0);
+    
 
 
     const asyncNewConversation = useAsyncCallback(store.newConversation);
     const asyncEmptyInterlocutor = useAsyncCallback(store.emptyInterlocutors);
-
+    const asyncSelectInterlocutor = useAsyncCallback(store.selectInterlocutor);
+    const asyncUnselectInterlocutor = useAsyncCallback(store.unselectInterlocutor);
     useEvt(ctx =>{
 
         Evt.merge(ctx, [store.evtInterlocutorSelected, store.evtInterlocutorUnselected]).attach(
@@ -48,35 +52,80 @@ export const Contacts: React.FunctionComponent<{
 
 
 
+
+    const backToConversation = useCallback(()=>{
+        
+        asyncEmptyInterlocutor.execute(user);
+
+    },[asyncEmptyInterlocutor, user])
+
+    
+
+
+
     return(
-        <div className={`contacts ${isComponentVisible ? "" : "hidden"}`}>
+        <div 
+            className="contacts"
+            style={
+                {
+                    height: isComponentVisible && 
+                    !asyncEmptyInterlocutor.loading &&
+                    !asyncNewConversation.loading ?
+                    "100%" : "0%",
+                }
+            }
+        >
             <header>
-                <h2>Contacts</h2>
-                <h3>{user.interlocutors.map(interlocutor => `${interlocutor.name}, `)}</h3>
                 <input 
                     type="button" 
-                    value="<" 
-                    onClick={useCallback(()=> asyncEmptyInterlocutor.execute(user) , [asyncEmptyInterlocutor, user])}
+                    value="<"
+                    style={
+                        {color: asyncEmptyInterlocutor.loading
+                            || 
+                        asyncNewConversation.loading ? "grey" : "greenyellow"}
+                    }
+                    disabled={asyncEmptyInterlocutor.loading}
+                    onClick={backToConversation}
                 />
+                <div>
+                    <h2>Contacts</h2>
+                    {
+                        asyncSelectInterlocutor.loading ||
+                        asyncUnselectInterlocutor.loading ?
+                        <Spinner /> : 
+                        <em>{user.interlocutors.map(interlocutor => `${interlocutor.name}, `)}</em>
+                    }
+                    
+
+                </div>
+
+
             </header>
-
             <em>{user.contacts.length} contacts</em>
-            {
-                user.contacts.map(
-                    (contact, index)=> 
-                            <Contact 
-                                store={store} 
-                                contact={contact} 
-                                user={user}
-                                key={index}
-                            />
 
-                )
-                
-            }
+            <section>
+                {
+                    user.contacts.map(
+                        (contact, index)=> 
+                                <Contact 
+                                    store={store} 
+                                    contact={contact} 
+                                    user={user}
+                                    asyncSelectInterlocutor={asyncSelectInterlocutor}
+                                    asyncUnselectInterlocutor={asyncUnselectInterlocutor}
+                                    key={index}
+                                />
+
+                    )
+                    
+                }
+            </section>
+
+
 
             <input 
                 disabled={user.interlocutors.length === 0} 
+                className={user.interlocutors.length === 0 ? "disabled" : ""}
                 type="button" 
                 value=">"
                 onClick={
@@ -107,12 +156,28 @@ const Contact: React.FunctionComponent<{
         "evtConversationStarted"
 
     >
+
+    asyncSelectInterlocutor: UseAsyncReturn<void, [{
+        user: Store["users"][number];
+        contact: Store["users"][number];
+    }]>
+
+    asyncUnselectInterlocutor: UseAsyncReturn<void, [{
+        user: Store["users"][number];
+        contact: Store["users"][number];
+    }]>
+
 }> = (props)=>{
 
-    const {contact, user, store} = props;
+    const {
+        contact, 
+        user, 
+        store, 
+        asyncSelectInterlocutor, 
+        asyncUnselectInterlocutor
+    } = props;
+
     const [isSelected, setIsSelected] = useState(false);
-    const asyncSelectInterlocutor = useAsyncCallback(store.selectInterlocutor);
-    const asyncUnselectInterlocutor = useAsyncCallback(store.unselectInterlocutor);
 
     const handleClick = useCallback(()=>{
         if(isSelected){
@@ -143,7 +208,7 @@ const Contact: React.FunctionComponent<{
     },[contact, user, store, isSelected])
 
     return(
-        <div onClick={handleClick}>
+        <div className={`contact ${isSelected ? "contact-selected" : ""}`} onClick={handleClick}>
 
             <p>{contact.name}</p>
 

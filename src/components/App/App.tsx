@@ -9,18 +9,22 @@ export const App: React.FunctionComponent<{store: Store}> = (props)=>{
     const {store} = props;
     const [userIndex, setUserIndex] = useState(0);
 
-    const toggleUser = useCallback(()=>{
-        if(store.users.length - 1 === userIndex){
-            setUserIndex(0);
+
+
+    (window as any).changeUser = function(index: number){
+        if(index >= store.users.length || index < 0){
             return;
         }
 
-        setUserIndex(userIndex + 1);
-    },[store, userIndex]);
+        setUserIndex(index);
+    }
+  
+
+    
 
 
     return(
-        <div>
+        <div className="App">
 
             {
                 store.users.map(
@@ -28,7 +32,6 @@ export const App: React.FunctionComponent<{store: Store}> = (props)=>{
                 )
             }
 
-            <input type="button" value="toggle User" onClick={toggleUser}/>
 
         </div>
     )

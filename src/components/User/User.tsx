@@ -57,32 +57,48 @@ export const User: React.FunctionComponent<{
 
     },[store, user])
 
+    const conversationsStyle = {
+        display: isContactVisible ? "none" : "flex"
+    }
 
 
 
     return(
-        <div className={`User ${isUserVisible ? "" : "hidden"}`}>
-            <div className={`conversation-wrapper ${isContactVisible || isConversationVisible ? "hidden" : ""}`}>
-                <h2>Conversations</h2>
+        <div className={isUserVisible ? "User" : "hidden"}>
+            <div className="conversation-wrapper" style={conversationsStyle}>
+                <header>
+                    <div>
+                        <h2>{user.name}</h2>
+                    </div>
+
+
+                    <input type="button" value="+" onClick={useCallback(()=> setIsContactVisible(true), [])}/>
+
+                </header>
 
                 <div className="conversations">
 
                     {
                         user.conversations.length === 0 ? "" : 
-                        user.conversations.map(conversation => 
-                            <p 
-                                key={conversation.id}
+                        user.conversations.map((conversation, index) => 
+                            <div 
+                                className="conversation-li"
+                                key={index}
                                 onClick={()=> selectConversation(conversation)}
                             >
                             {
-                                conversation.participants.map(participant => `${participant.name}, `)
+                                <p>
+                                    {
+                                        conversation.participants.map(participant => `${participant.name}, `)
+                                    }
+                                </p>
                             }
-                        </p>)
+                            </div>
+                        )
                     }
 
 
                 </div>
-                <input type="button" value="+" onClick={useCallback(()=> setIsContactVisible(true), [])}/>
             </div>
 
             <Contacts store={store} user={user} isComponentVisible={isContactVisible}/>
