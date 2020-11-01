@@ -5,7 +5,6 @@ import {useEvt} from "evt/hooks";
 import {same} from "evt/tools/inDepth";
 import {Evt} from "evt";
 import "./Contacts.scss";
-import {Spinner} from "../Spinner";
 
 
 

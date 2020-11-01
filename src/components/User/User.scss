@@ -34,13 +34,7 @@ body{
                         text-align: center;
                     }
 
-                    >input{
-                        font-size: 1.5em;
-                        background-color: $background-clickable;
-                        border: none;
-                        padding: 0 10px 0 10px;
-                        color: greenyellow;
-                    }
+                    
 
 
                 }
@@ -55,6 +49,7 @@ body{
                         transition: color 300ms;
                         transition: border-bottom 300ms;
                         padding-left: 10px;
+                        word-wrap: break-word;
 
                     }
 

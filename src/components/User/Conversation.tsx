@@ -1,9 +1,8 @@
-import React, {useState, useCallback, useReducer} from "react";
+import React, {useState, useCallback, useReducer, useRef, useEffect} from "react";
 import {Store} from "../../logic";
 import {useAsyncCallback} from "react-async-hook";
 import {useEvt} from "evt/hooks";
 import {same} from "evt/tools/inDepth";
-import {Evt} from "evt";
 import "./Conversation.scss";
 
 
@@ -22,14 +21,15 @@ export const Conversation: React.FunctionComponent<{
     const {user, isComponentVisible, store} = props;
     const [textInput, setTextInput] = useState("");
     const [, forceUpdate] = useReducer(x=>x+1, 0);
+    const messagesRef = useRef<HTMLDivElement>(null);
 
     const asyncSendMessage = useAsyncCallback(store.sendMessage);
     const asyncUnselectConversation = useAsyncCallback(store.unselectConversation);
 
 
 
-    const handleSubmit = useCallback((event: React.FormEvent<HTMLFormElement>)=>{
-        event.preventDefault();
+
+    const handleSubmit = useCallback(()=>{
 
         asyncSendMessage.execute({
             "description": textInput,
@@ -47,10 +47,14 @@ export const Conversation: React.FunctionComponent<{
 
     useEvt(ctx =>{
         store.evtMessageSent.attach(
-            data => data.emitter.currentConversation?.id === user.currentConversation?.id,
+            data => same(
+                data.emitter.currentConversation?.participants,
+                user.currentConversation?.participants
+            ),
             ctx,
             ()=> forceUpdate()
         );
+
 
         store.evtConversationSelected.attach(
             data => same(data.user, user),
@@ -59,7 +63,19 @@ export const Conversation: React.FunctionComponent<{
         );
         
 
-    },[store, user])
+    },[store, user]);
+
+    useEffect(()=>{
+        
+        if(!messagesRef || !messagesRef.current){
+            return;
+        }
+
+        messagesRef.current.scrollTo(0, messagesRef.current.scrollHeight);
+
+
+
+    });
 
     
 
@@ -71,7 +87,8 @@ export const Conversation: React.FunctionComponent<{
             className="Conversation"
             style={
                 {
-                    height: isComponentVisible ? "100%" : "0%"
+                    height: isComponentVisible 
+                    && !asyncUnselectConversation.loading ? "100%" : "0%"
                 }
             }
         >
@@ -97,26 +114,31 @@ export const Conversation: React.FunctionComponent<{
             </header>
 
 
-            <div className="messages">
+            <div ref={messagesRef} className="messages">
                 {
                     user.currentConversation?.messages.map(
-                        (message, index) =>{
-                            return <div key={index} className={message.emitter === user ? "outgoing" : "incoming"}>
-                                <em>{message.emitter.name}</em>
-                                <p>{
-                                    message.description
-                                    
-                                }</p>
-                            </div>
-                        }
+                        (message, index) => 
+                            <Message 
+                                key={index} 
+                                message={message}
+                                user={user}
+                            />
                     )
                 }
             </div>
 
-            <form onSubmit={handleSubmit}>
-                <textarea onChange={useCallback(({target}) => setTextInput(target.value), [])} value={textInput}/>
+            <form>
+                <textarea 
+                    onChange={useCallback(({target}) => setTextInput(target.value), [])} 
+                    value={textInput}
+                />
 
-                <input type="submit" value=">"/>
+                <input 
+                    type="submit" 
+                    value={asyncSendMessage.loading ? "..." : ">"}
+                    disabled={asyncSendMessage.loading}
+                    onClick={handleSubmit}
+                />
 
             </form>
                 
@@ -126,5 +148,64 @@ export const Conversation: React.FunctionComponent<{
 
         </div>
 
+    )
+}
+
+const Message: React.FunctionComponent<{
+    message: Store["users"][number]["conversations"][number]["messages"][number];
+    user: Store["users"][number];
+
+}> = (props)=>{
+
+    const {message, user} = props
+
+    const messageRef = useRef<HTMLDivElement>(null);
+
+
+
+    const adjustWidth = useCallback(async ()=>{
+
+        await new Promise<void>(resolve => setTimeout(resolve, 1));
+
+        if(!messageRef || !messageRef.current){
+                return;
+        }
+
+        messageRef.current.style.width = `${
+            message.emitter === user ?
+            "86%" : "96%"
+        }`;
+
+    },[user, message.emitter]);
+
+    useEffect(()=>{
+
+        adjustWidth();
+
+
+    },[adjustWidth]);
+
+
+
+
+
+
+
+    return(
+        <div 
+            ref={messageRef}
+            className={message.emitter === user ? "outgoing" : "incoming"}
+            style={
+                {
+                    width: "30%"
+
+                }
+            }
+        >
+            <em>{message.emitter.name}</em>
+            <p>{
+                message.description
+            }</p>
+        </div>
     )
 }

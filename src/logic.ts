@@ -207,6 +207,7 @@ export async function getStore(): Promise<Store>{
                })()
            });
 
+
            store.evtMessageSent.post(params);
 
 

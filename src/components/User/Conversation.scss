@@ -1,12 +1,12 @@
 $background-clickable: rgb(21, 21, 65);
 .App{
     .Conversation{
-        height: 0;
         display: flex;
         overflow: hidden;
         transition: height 300ms;
         width: 100%;
         flex-direction: column;
+
 
         >header{
             display: flex;
@@ -16,27 +16,28 @@ $background-clickable: rgb(21, 21, 65);
                 flex: 1;
             }
 
-            >input{
-                background-color: $background-clickable;
-                border: none;
-                font-size: 1.5em;
-                padding: 0 10px 0 10px;
-                color: greenyellow;
-            }
+            
         }
 
         .messages{
-            flex: 1;
+            flex: 1;            
             overflow: auto;
+            padding: 10px 10px 0 10px;
             div{
-                margin: 10px;
-                padding: 5px;
+                overflow-anchor: auto;
+                width: 0;
+                overflow: hidden;
+                word-wrap: break-word;
+                transition: width 300ms;
+                margin-bottom: 10px;
                 border-radius: 5px;
+                padding: 5px;
                 
             }
             .outgoing{
                 background-color: indigo;
-                margin-left: 40px;
+                margin-left: 10%;
+                
             }
 
             .incoming{
@@ -48,8 +49,22 @@ $background-clickable: rgb(21, 21, 65);
         >form{
             display: flex;
             >textarea{
-                flex: 1
+                flex: 1;
+                resize: none;
+                background-color: rgb(22, 48, 22);
+                border: none;
+                
             }
+
+            >textarea:focus{
+                outline: none;
+                color: rgb(202, 35, 35);
+
+
+            }
+
+
+            
 
 
         }

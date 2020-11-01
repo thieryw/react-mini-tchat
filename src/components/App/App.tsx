@@ -1,6 +1,7 @@
-import React, {useState, useCallback} from "react";
+import React, {useState} from "react";
 import {Store} from "../../logic";
 import {User} from "../User/User";
+import "./App.scss";
 
 
 
