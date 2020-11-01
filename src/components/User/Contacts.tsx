@@ -92,7 +92,7 @@ export const Contacts: React.FunctionComponent<{
                     {
                         asyncSelectInterlocutor.loading ||
                         asyncUnselectInterlocutor.loading ?
-                        <Spinner /> : 
+                        <em className="loading">Loading...</em> : 
                         <em>{user.interlocutors.map(interlocutor => `${interlocutor.name}, `)}</em>
                     }
                     

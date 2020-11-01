@@ -30,16 +30,18 @@ export const User: React.FunctionComponent<{
             () => setIsContactVisible(false)
         );
 
-        store.evtConversationSelected.attach(
-            data => same(data.user, user),
-            ctx,
-            () => setIsConversationVisible(true)
-        );
+        
 
         store.evtConversationUnselected.attach(
             _user => same(user, _user),
             ctx,
             () => setIsConversationVisible(false)
+        );
+
+        store.evtConversationSelected.attach(
+            data => same(data.user, user),
+            ctx,
+            () => setIsConversationVisible(true)
         );
 
 
@@ -48,6 +50,9 @@ export const User: React.FunctionComponent<{
 
 
     const selectConversation = useCallback((conversation: Store["users"][number]["conversations"][number])=>{
+
+
+
         store.selectConversation({
             conversation,
             user
@@ -55,10 +60,12 @@ export const User: React.FunctionComponent<{
 
 
 
+
     },[store, user])
 
     const conversationsStyle = {
-        display: isContactVisible ? "none" : "flex"
+        display: isContactVisible || isConversationVisible ? "none" : "flex"
+
     }
 
 

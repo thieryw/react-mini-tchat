@@ -24,6 +24,9 @@
                 h2{
                     align-self: center;
                 }
+                .loading{
+                    color: greenyellow;
+                }
             }
 
             >input{
@@ -32,6 +35,7 @@
                 background-color: rgb(21, 21, 65);
                 border: none;
                 color: greenyellow;
+             
             }
 
         }
@@ -52,6 +56,7 @@
 
             .contact{
                 border-bottom: solid grey 1px;
+                padding-left: 10px;
             }
 
             .contact-selected{

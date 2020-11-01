@@ -3,6 +3,8 @@ import {Store} from "../../logic";
 import {useAsyncCallback} from "react-async-hook";
 import {useEvt} from "evt/hooks";
 import {same} from "evt/tools/inDepth";
+import {Evt} from "evt";
+import "./Conversation.scss";
 
 
 export const Conversation: React.FunctionComponent<{
@@ -10,7 +12,8 @@ export const Conversation: React.FunctionComponent<{
         "sendMessage" |
         "evtMessageSent" |
         "evtConversationSelected" |
-        "unselectConversation"
+        "unselectConversation" |
+        "evtConversationUnselected"
     >;
     user: Store["users"][number];
     isComponentVisible: boolean;
@@ -53,16 +56,25 @@ export const Conversation: React.FunctionComponent<{
             data => same(data.user, user),
             ctx,
             ()=> forceUpdate()
-        )
+        );
+        
 
     },[store, user])
 
     
 
 
+
     return(
 
-        <div className={`Conversation ${isComponentVisible ? "" : "hidden"}`}>
+        <div 
+            className="Conversation"
+            style={
+                {
+                    height: isComponentVisible ? "100%" : "0%"
+                }
+            }
+        >
             <header>
                 <h3>
                     {
@@ -104,7 +116,7 @@ export const Conversation: React.FunctionComponent<{
             <form onSubmit={handleSubmit}>
                 <textarea onChange={useCallback(({target}) => setTextInput(target.value), [])} value={textInput}/>
 
-                <input type="submit"/>
+                <input type="submit" value=">"/>
 
             </form>
                 

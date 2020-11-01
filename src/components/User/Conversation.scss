@@ -1,0 +1,57 @@
+$background-clickable: rgb(21, 21, 65);
+.App{
+    .Conversation{
+        height: 0;
+        display: flex;
+        overflow: hidden;
+        transition: height 300ms;
+        width: 100%;
+        flex-direction: column;
+
+        >header{
+            display: flex;
+            padding-left: 10px;
+            border-bottom: solid black 1px;
+            h3{
+                flex: 1;
+            }
+
+            >input{
+                background-color: $background-clickable;
+                border: none;
+                font-size: 1.5em;
+                padding: 0 10px 0 10px;
+                color: greenyellow;
+            }
+        }
+
+        .messages{
+            flex: 1;
+            overflow: auto;
+            div{
+                margin: 10px;
+                padding: 5px;
+                border-radius: 5px;
+                
+            }
+            .outgoing{
+                background-color: indigo;
+                margin-left: 40px;
+            }
+
+            .incoming{
+
+                background-color: $background-clickable;
+            }
+        }
+
+        >form{
+            display: flex;
+            >textarea{
+                flex: 1
+            }
+
+
+        }
+    }
+}
