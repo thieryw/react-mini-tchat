@@ -2,76 +2,64 @@
 
 $background-clickable: rgb(21, 21, 65);
 
-body{
 
     
-    .App{
-        height: 100vh;
-        width: 100vw;
+        
+
+.User{
+    width: 100%;
+    height: 100%;
+    background-color: rgb(13, 15, 13);
+    overflow: hidden;
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+
+    .conversation-wrapper{
+        width: 100%;
         display: flex;
-        color: rgba(255, 255, 255, 0.61);
+        flex-direction: column;
 
-        .User{
-            width: 100%;
-            height: 100%;
-            background-color: rgb(13, 15, 13);
-            overflow: hidden;
+        >header{
+            border-bottom: solid black 2px;
             display: flex;
-            box-sizing: border-box;
+
+            >div{
+                flex: 1;
+                text-align: center;
+            }
+            
+
+
+        }
+        .conversations{
+            flex: 1;
+            overflow: auto;
+            display: flex;
             flex-direction: column;
+            .conversation-li{
+                border-bottom: solid grey 1px;
+                background-color: $background-clickable;
+                transition: color 300ms;
+                transition: border-bottom 300ms;
+                padding-left: 10px;
+                word-wrap: break-word;
 
-            .conversation-wrapper{
-                width: 100%;
-                display: flex;
-                flex-direction: column;
+            }
 
-                >header{
-                    border-bottom: solid black 2px;
-                    display: flex;
-
-                    >div{
-                        flex: 1;
-                        text-align: center;
-                    }
-
-                    
-
-
-                }
-                .conversations{
-                    flex: 1;
-                    overflow: auto;
-                    display: flex;
-                    flex-direction: column;
-                    .conversation-li{
-                        border-bottom: solid grey 1px;
-                        background-color: $background-clickable;
-                        transition: color 300ms;
-                        transition: border-bottom 300ms;
-                        padding-left: 10px;
-                        word-wrap: break-word;
-
-                    }
-
-                    .conversation-li:hover{
-                        cursor: pointer;
-                        color: greenyellow;
-                        border-bottom: solid greenyellow 1px;
-                    }
-
-                }
-
-              
+            .conversation-li:hover{
+                cursor: pointer;
+                color: greenyellow;
+                border-bottom: solid greenyellow 1px;
             }
         }
 
-
+        
     }
+}
 
-    .hidden{
-        display: none;
 
-    }
+
+
 
     
-}

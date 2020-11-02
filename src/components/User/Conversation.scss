@@ -1,72 +1,79 @@
 $background-clickable: rgb(21, 21, 65);
-.App{
-    .Conversation{
+.Conversation{
+    display: flex;
+    overflow: hidden;
+    transition: height 300ms;
+    width: 100%;
+    flex-direction: column;
+
+
+    >header{
         display: flex;
-        overflow: hidden;
-        transition: height 300ms;
-        width: 100%;
-        flex-direction: column;
-
-
-        >header{
-            display: flex;
-            padding-left: 10px;
-            border-bottom: solid black 1px;
-            h3{
-                flex: 1;
-            }
-
-            
+        padding-left: 10px;
+        border-bottom: solid black 1px;
+        h3{
+            flex: 1;
         }
 
-        .messages{
-            flex: 1;            
-            overflow: auto;
+    }
+    .messages{
+        flex: 1;            
+        overflow: auto;
+        >div{
+            width: 0;
+            transition: width 300ms;
+            border-radius: 5px;
+            display: flex;
+            box-sizing: border-box;
             padding: 10px 10px 0 10px;
-            div{
-                overflow-anchor: auto;
-                width: 0;
-                overflow: hidden;
-                word-wrap: break-word;
-                transition: width 300ms;
-                margin-bottom: 10px;
+
+            >div{
                 border-radius: 5px;
+                display: flex;
+                flex-direction: column;
+                flex: 1;
                 padding: 5px;
-                
+                word-break: break-all;
+                >p{
+                    overflow: hidden;
+
+                }
             }
-            .outgoing{
+
+
+
+
+        }
+        .outgoing{
+            padding-left: 50px;
+            >div{
                 background-color: indigo;
-                margin-left: 10%;
-                
             }
+        }
 
-            .incoming{
-
+        .incoming{
+            >div{
                 background-color: $background-clickable;
             }
         }
+    }
 
-        >form{
-            display: flex;
-            >textarea{
-                flex: 1;
-                resize: none;
-                background-color: rgb(22, 48, 22);
-                border: none;
-                
-            }
+    >form{
+        display: flex;
+        >textarea{
+            flex: 1;
+            resize: none;
+            background-color: rgb(22, 48, 22);
+            border: none
+        }
 
-            >textarea:focus{
-                outline: none;
-                color: rgb(202, 35, 35);
-
-
-            }
-
-
-            
+        >textarea:focus{
+            outline: none;
+            color: rgb(202, 35, 35);
 
 
         }
-    }
+
+
+     }
 }

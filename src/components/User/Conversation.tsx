@@ -171,10 +171,7 @@ const Message: React.FunctionComponent<{
                 return;
         }
 
-        messageRef.current.style.width = `${
-            message.emitter === user ?
-            "86%" : "96%"
-        }`;
+        messageRef.current.style.width = "100%";
 
     },[user, message.emitter]);
 
@@ -197,15 +194,18 @@ const Message: React.FunctionComponent<{
             className={message.emitter === user ? "outgoing" : "incoming"}
             style={
                 {
-                    width: "30%"
+                    width: "50%"
 
                 }
             }
         >
-            <em>{message.emitter.name}</em>
-            <p>{
-                message.description
-            }</p>
+            <div>
+                <em>{message.emitter.name}</em>
+                <p>{
+                    message.description
+                }</p>
+            </div>
+
         </div>
     )
 }

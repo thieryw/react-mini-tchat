@@ -2,6 +2,10 @@
 
 $background-clickable: rgb(21, 21, 65);
 .App{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    color: rgba(255, 255, 255, 0.61);
     input{
                     background-color: $background-clickable;
                     border: none;
@@ -13,5 +17,9 @@ $background-clickable: rgb(21, 21, 65);
     input:focus{
         outline: none;
 
+    }
+    .hidden{
+        display: none;
+    
     }
 }
