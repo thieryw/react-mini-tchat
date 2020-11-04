@@ -21,6 +21,7 @@ export const Conversation: React.FunctionComponent<{
     const {user, isComponentVisible, store} = props;
     const [textInput, setTextInput] = useState("");
     const [numberOfMessagesToDisplay, setNumberOfMessagesToDisplay] = useState(10);
+    const [currentScrollHeight, setCurrentScrollHeight] = useState(0);
 
    
     const [, forceUpdate] = useReducer(x=>x+1, 0);
@@ -28,9 +29,6 @@ export const Conversation: React.FunctionComponent<{
 
     const asyncSendMessage = useAsyncCallback(store.sendMessage);
     const asyncUnselectConversation = useAsyncCallback(store.unselectConversation);
-
-
-
 
     const handleSubmit = useCallback(()=>{
 
@@ -58,6 +56,12 @@ export const Conversation: React.FunctionComponent<{
             ()=> {
                forceUpdate(); 
                scrollToBottom();
+
+               if(!messagesRef || !messagesRef.current){
+                   return;
+               }
+
+               setCurrentScrollHeight(messagesRef.current.scrollHeight);
             }
         );
 
@@ -69,6 +73,10 @@ export const Conversation: React.FunctionComponent<{
                 forceUpdate();
                 setNumberOfMessagesToDisplay(10);
                 scrollToBottom();
+                if(!messagesRef || !messagesRef.current){
+                    return;
+                }
+                setCurrentScrollHeight(messagesRef.current.scrollHeight);
             }
         );
         
@@ -86,7 +94,7 @@ export const Conversation: React.FunctionComponent<{
     },[])
 
     
-    const handleScroll = useCallback(()=>{
+    const handleScroll = useCallback( async ()=>{
 
 
 
@@ -94,24 +102,36 @@ export const Conversation: React.FunctionComponent<{
             return;
         }
 
-        if(
-            user.currentConversation === undefined || 
-            messagesRef.current.scrollTop !== 0 || 
-            user.currentConversation.messages.length === numberOfMessagesToDisplay
-        ){
+        if(messagesRef.current.scrollTop !== 0){
             return;
         }
 
+        await new Promise<void>(resolve =>{
+            if(user.currentConversation === undefined
+                || user.currentConversation.messages.length === numberOfMessagesToDisplay
+            ){
+                return;
+            }
 
-        if(numberOfMessagesToDisplay + 10 > user.currentConversation.messages.length){
-            setNumberOfMessagesToDisplay(user.currentConversation.messages.length);
-            return;
-        }
 
-        setNumberOfMessagesToDisplay(numberOfMessagesToDisplay + 10);
+            if(numberOfMessagesToDisplay + 5 > user.currentConversation.messages.length){
+                setNumberOfMessagesToDisplay(user.currentConversation.messages.length);
+                resolve();
+            }
 
+            setNumberOfMessagesToDisplay(numberOfMessagesToDisplay + 5);
+            resolve();
+            
+        })
+        
 
-    },[numberOfMessagesToDisplay, user.currentConversation]);
+        messagesRef.current.scrollTo(
+            0, messagesRef.current.scrollHeight - currentScrollHeight
+        );
+
+        setCurrentScrollHeight(messagesRef.current.scrollHeight);
+
+    },[numberOfMessagesToDisplay, user.currentConversation, currentScrollHeight]);
 
     
 
@@ -173,11 +193,13 @@ export const Conversation: React.FunctionComponent<{
 
             <form>
                 <textarea 
+                    className="text-input"
                     onChange={useCallback(({target}) => setTextInput(target.value), [])} 
                     value={textInput}
                 />
 
                 <input 
+                    className="submit"
                     type="submit" 
                     value={asyncSendMessage.loading ? "..." : ">"}
                     disabled={asyncSendMessage.loading}
