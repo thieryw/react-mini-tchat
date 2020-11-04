@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f519a294b9068c7bea6665d5ed3839e3",
+    "revision": "df590ad87774ef9b0ba67b7d19a390e9",
     "url": "/react-mini-tchat/index.html"
   },
   {
-    "revision": "6aebbbf0bbe47ecb1ebd",
-    "url": "/react-mini-tchat/static/css/main.ad4feb90.chunk.css"
+    "revision": "38b20db377b26822d6ac",
+    "url": "/react-mini-tchat/static/css/main.54f10f8d.chunk.css"
   },
   {
     "revision": "3e6e9efa603078eb8e4c",
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/react-mini-tchat/static/js/2.4f1a113f.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "6aebbbf0bbe47ecb1ebd",
-    "url": "/react-mini-tchat/static/js/main.5c3c1707.chunk.js"
+    "revision": "38b20db377b26822d6ac",
+    "url": "/react-mini-tchat/static/js/main.d99a2b93.chunk.js"
   },
   {
     "revision": "57d6b7d0c4c17a368796",

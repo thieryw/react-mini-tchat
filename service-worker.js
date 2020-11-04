@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/react-mini-tchat/precache-manifest.568a4349f550149e45c506975be3d8b1.js"
+  "/react-mini-tchat/precache-manifest.ffc060e888eef5a213e1c912f609c683.js"
 );
 
 self.addEventListener('message', (event) => {
