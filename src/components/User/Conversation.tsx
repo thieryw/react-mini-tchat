@@ -20,6 +20,9 @@ export const Conversation: React.FunctionComponent<{
 }> = (props)=>{
     const {user, isComponentVisible, store} = props;
     const [textInput, setTextInput] = useState("");
+    const [numberOfMessagesToDisplay, setNumberOfMessagesToDisplay] = useState(10);
+
+   
     const [, forceUpdate] = useReducer(x=>x+1, 0);
     const messagesRef = useRef<HTMLDivElement>(null);
 
@@ -52,30 +55,65 @@ export const Conversation: React.FunctionComponent<{
                 user.currentConversation?.participants
             ),
             ctx,
-            ()=> forceUpdate()
+            ()=> {
+               forceUpdate(); 
+               scrollToBottom();
+            }
         );
 
 
         store.evtConversationSelected.attach(
             data => same(data.user, user),
             ctx,
-            ()=> forceUpdate()
+            ()=> {
+                forceUpdate();
+                setNumberOfMessagesToDisplay(10);
+                scrollToBottom();
+            }
         );
         
 
     },[store, user]);
 
-    useEffect(()=>{
-        
+
+    const scrollToBottom = useCallback(()=>{
         if(!messagesRef || !messagesRef.current){
             return;
         }
 
         messagesRef.current.scrollTo(0, messagesRef.current.scrollHeight);
 
+    },[])
+
+    
+    const handleScroll = useCallback(()=>{
 
 
-    });
+
+        if(!messagesRef || !messagesRef.current){
+            return;
+        }
+
+        if(
+            user.currentConversation === undefined || 
+            messagesRef.current.scrollTop !== 0 || 
+            user.currentConversation.messages.length === numberOfMessagesToDisplay
+        ){
+            return;
+        }
+
+
+        if(numberOfMessagesToDisplay + 10 > user.currentConversation.messages.length){
+            setNumberOfMessagesToDisplay(user.currentConversation.messages.length);
+            return;
+        }
+
+        setNumberOfMessagesToDisplay(numberOfMessagesToDisplay + 10);
+
+
+    },[numberOfMessagesToDisplay, user.currentConversation]);
+
+    
 
     
 
@@ -114,15 +152,21 @@ export const Conversation: React.FunctionComponent<{
             </header>
 
 
-            <div ref={messagesRef} className="messages">
+            <div onScroll={handleScroll} ref={messagesRef} className="messages">
+
                 {
                     user.currentConversation?.messages.map(
                         (message, index) => 
+                            user.currentConversation === undefined ? "" : 
+                            index < user.currentConversation.messages.length - numberOfMessagesToDisplay ? "" :
                             <Message 
                                 key={index} 
                                 message={message}
                                 user={user}
+                                
                             />
+                         
+
                     )
                 }
             </div>
@@ -173,7 +217,7 @@ const Message: React.FunctionComponent<{
 
         messageRef.current.style.width = "100%";
 
-    },[user, message.emitter]);
+    },[messageRef]);
 
     useEffect(()=>{
 
@@ -181,6 +225,9 @@ const Message: React.FunctionComponent<{
 
 
     },[adjustWidth]);
+
+
+
 
 
 
